@@ -8,7 +8,6 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.InvalidPropertiesFormatException;
 import java.util.UUID;
 
 @Service
@@ -44,14 +43,14 @@ public class HomeService {
         return tempId;
     }
 
-    public String verifyOtp(String tempId, String otp) throws InvalidPropertiesFormatException {
+    public String verifyOtp(String tempId, String otp) {
         Cache cache = cacheManager.getCache("user");
         TempProfile tempProfile = cache.get(tempId, TempProfile.class);
 
-        if (tempProfile.getOtp().equals(otp)) {
+        if (tempProfile != null && tempProfile.getOtp().equals(otp)) {
             return "OTP verified Successfully";
         } else {
-            throw new InvalidPropertiesFormatException("Couldn't validate");
+            return "Invalid OTP";
         }
     }
 
